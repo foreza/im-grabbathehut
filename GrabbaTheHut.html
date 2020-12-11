@@ -1,0 +1,114 @@
+<head>
+
+    <title>Grabba welcomes you!</title>
+
+    <style>
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            height: auto;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Paste your JSON payload</h1>
+    <textarea id="display_extractTarget">
+    </textarea>
+    <button onclick="extractVast()">Extract VAST</button>
+
+
+    <h1>VAST transaction info</h1>
+    <textarea id="display_transactionInfo">
+    </textarea>
+    <br />
+    <h1>VAST payload</h1>
+    <textarea id="display_outputTarget">
+    </textarea>
+
+    <button onclick="copyOutputToClipboard()">Copy to Clipboard</button>
+    <button onclick="clear()">Clear all</button>
+
+    <br/>
+
+</body>
+
+<script>
+
+    let payloadToGrab;
+    let payloadExtracted;
+
+    let extractTargetRef;
+    let outputTargetRef;
+    let transactionInfoRef;
+
+    let outputXML;
+
+
+    document.addEventListener("DOMContentLoaded", function(){
+
+        extractTargetRef = document.getElementById("display_extractTarget");
+        outputTargetRef = document.getElementById("display_outputTarget");
+        transactionInfoRef = document.getElementById("display_transactionInfo");
+
+    });
+
+    function extractVast() {
+
+        try {
+
+            payloadToGrab = extractTargetRef.value;
+
+            let payloadJson = JSON.parse(payloadToGrab);
+            let payloadAds = payloadJson.adSets[0].ads;
+
+            let transactionObj = payloadAds[0].transaction;
+            let transactionInfo = {
+                adSourceName: transactionObj.adSourceName,
+                adomain: transactionObj.adomain,
+                buyerName: transactionObj.buyerName,
+                buyerPrice: transactionObj.buyerPrice,
+                dspId: transactionObj.dspId
+            };
+
+            let transactionString = JSON.stringify(transactionInfo);
+
+            let pubContent = payloadAds[0].pubContent;
+            let vastPayload = pubContent.substring(
+                pubContent.indexOf("<VAST"),
+                pubContent.indexOf("VAST>") + 5)
+                .replace(/\\/g, "");
+
+            updateDisplay(transactionString, vastPayload);
+
+        } catch (e) {
+            console.error("Error: ", e);
+        }
+
+    }
+
+    function clear() {
+        clearContents(this)
+        extractTargetRef.value = "";
+        transactionInfoRef.value = "";
+        outputTargetRef.value = "";
+    }
+
+
+    function updateDisplay(transactionInfo, payload) {
+        transactionInfoRef.value = transactionInfo;
+        outputTargetRef.value = payload;
+    }
+
+
+    function copyOutputToClipboard() {
+        var text = document.getElementById("display_outputTarget");
+        text.select();
+        document.execCommand("copy");
+        alert("Grabba has copied output to clipboard")
+    }
+
+
+</script>
