@@ -29,8 +29,15 @@
     </textarea>
 
     <button onclick="copyOutputToClipboard()">Copy to Clipboard</button>
-    <button onclick="clear()">Clear all</button>
+    <button onclick="clearAll()">Clear all</button>
+    <button onclick="pullImpressionURL()">Get Impression URLs</button>
 
+    <h1>VAST imp urls (only do this if you KNOW what you doing)</h1>
+    <div>
+        <ul id="display_impressionURL"> 
+            <!-- dynamically add our impression urls here -->
+        </ul>
+    </div>
     <br/>
 
 </body>
@@ -43,6 +50,8 @@
     let extractTargetRef;
     let outputTargetRef;
     let transactionInfoRef;
+    let impressionURLRef;
+
 
     let outputXML;
 
@@ -52,6 +61,8 @@
         extractTargetRef = document.getElementById("display_extractTarget");
         outputTargetRef = document.getElementById("display_outputTarget");
         transactionInfoRef = document.getElementById("display_transactionInfo");
+        impressionURLRef = document.getElementById("display_impressionURL");
+
 
     });
 
@@ -81,6 +92,8 @@
                 pubContent.indexOf("VAST>") + 5)
                 .replace(/\\/g, "");
 
+            outputXML = vastPayload;
+
             updateDisplay(transactionString, vastPayload);
 
         } catch (e) {
@@ -89,11 +102,34 @@
 
     }
 
-    function clear() {
-        clearContents(this)
+    function pullImpressionURL(){
+
+        if (outputXML == null || outputXML == ""){
+            console.error("Extract VAST first, dawg");
+            return;
+        }
+
+        let parser = new DOMParser();
+        xmlDoc = parser.parseFromString(outputXML,"text/xml");
+        
+        let impURLArr = xmlDoc.getElementsByTagName("Impression");
+
+        for (var i = 0; i < impURLArr.length; ++i){
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            a.setAttribute("href", impURLArr[i].textContent);
+            a.setAttribute("target", "_blank");
+            a.innerText = impURLArr[i].textContent;
+            li.appendChild(a);
+            impressionURLRef.appendChild(li);
+        }
+    }
+
+    function clearAll() {
         extractTargetRef.value = "";
         transactionInfoRef.value = "";
         outputTargetRef.value = "";
+        impressionURLRef.innerHTML = "";
     }
 
 
