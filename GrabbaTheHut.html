@@ -8,37 +8,50 @@
             min-height: 100px;
             height: auto;
         }
+
+        .half-pane {
+            max-width: 50%;
+        }
     </style>
 
 </head>
 
 <body>
 
-    <h1>Paste your JSON payload</h1>
-    <textarea id="display_extractTarget">
-    </textarea>
-    <button onclick="extractVast()">Extract VAST</button>
+    <div class="half-pane">
 
+        <h1>Paste your JSON payload</h1>
+        <textarea id="display_extractTarget">
+        </textarea>
+        <button onclick="extractVast()">Extract VAST</button>
+    
+    
+        <h1>VAST transaction info</h1>
+        <textarea id="display_transactionInfo">
+        </textarea>
+        <br />
+        <h1>VAST payload</h1>
+        <textarea id="display_outputTarget">
+        </textarea>
+    
+        <button onclick="copyOutputToClipboard()">Copy to Clipboard</button>
+        <button onclick="clearAll()">Clear all</button>
+        <button onclick="pullImpressionURL()">Get Impression URLs</button>
+    
+        <h1>Don't you want to test this? You probably should...</h1>
+        <p>Test this in the <a href="https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/vastinspector">IMASDK Validator</a></p>
 
-    <h1>VAST transaction info</h1>
-    <textarea id="display_transactionInfo">
-    </textarea>
-    <br />
-    <h1>VAST payload</h1>
-    <textarea id="display_outputTarget">
-    </textarea>
+        <h1>VAST imp urls (only do this if you KNOW what you doing)</h1>
+        <p></p>
+        <div>
+            <ul id="display_impressionURL"> 
+                <!-- dynamically add our impression urls here -->
+            </ul>
+        </div>
+        <br/>
 
-    <button onclick="copyOutputToClipboard()">Copy to Clipboard</button>
-    <button onclick="clearAll()">Clear all</button>
-    <button onclick="pullImpressionURL()">Get Impression URLs</button>
-
-    <h1>VAST imp urls (only do this if you KNOW what you doing)</h1>
-    <div>
-        <ul id="display_impressionURL"> 
-            <!-- dynamically add our impression urls here -->
-        </ul>
     </div>
-    <br/>
+  
 
 </body>
 
