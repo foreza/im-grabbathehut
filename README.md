@@ -1,5 +1,8 @@
 # im-grabbathehut
 
+Access here:
+https://jasonthechiu.com/im-grabbathehut/GrabbaTheHut.html 
+
 ## Steps:
 
 - Open `GrabbatheHut.html`
